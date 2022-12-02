@@ -1,5 +1,23 @@
 <template>
   <div class="about">
-    <h1>This is an about page</h1>
+    <PokemonDetails :pokemonAtributes="pokemonSelected" />
   </div>
 </template>
+
+<script>
+import PokemonDetails from '@/components/PokemonDetails.vue';
+import { mapState } from 'vuex';
+
+export default {
+  name: 'AboutView',
+  components: {
+    PokemonDetails,
+  },
+  computed: {
+    ...mapState({
+      pokemonSelected: ({ pokemon }) => pokemon.pokemonSelected,
+    }),
+  },
+};
+
+</script>

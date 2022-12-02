@@ -1,18 +1,34 @@
 <template>
   <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <ListPokemon :pokemons="pokemonList" @viewPokemon="view"/>
   </div>
 </template>
 
 <script>
-// @ is an alias to /src
-import HelloWorld from '@/components/HelloWorld.vue';
+import { mapState } from 'vuex';
+import { FETCH_POKEMON, FETCH_POKEMON_SELECTED } from '@/store/modules/pokemon/actions';
+import ListPokemon from '@/components/ListPokemon.vue';
 
 export default {
   name: 'HomeView',
   components: {
-    HelloWorld,
+    ListPokemon,
   },
+  computed: {
+    ...mapState({
+      pokemonList: ({ pokemon }) => pokemon.pokemon,
+    }),
+  },
+  methods: {
+    async view(pokemonSelected) {
+      const id = pokemonSelected.url.split('/')[6] || '';
+      await this.$store.dispatch(FETCH_POKEMON_SELECTED, id);
+      this.$router.push(`/about/${id}`);
+    },
+  },
+  async mounted() {
+    await this.$store.dispatch(FETCH_POKEMON);
+  },
+
 };
 </script>
